@@ -39,3 +39,15 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# ── Server (Python) ──────────────────────────────────────
+server/__pycache__/
+server/**/__pycache__/
+server/**/*.pyc
+server/**/*.pyo
+server/.env
+server/venv/
+server/.venv/
+server/*.egg-info/
+server/dist/
+server/.pytest_cache/

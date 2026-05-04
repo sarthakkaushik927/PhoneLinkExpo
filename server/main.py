@@ -1,0 +1,17 @@
+"""
+main.py — PhoneLink Server Entry Point
+"""
+
+import io
+import sys
+
+# Force UTF-8 output on Windows (fixes emoji encoding errors)
+if sys.platform == "win32":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
+
+from app.server import WebSocketServer
+
+if __name__ == "__main__":
+    server = WebSocketServer()
+    server.run()

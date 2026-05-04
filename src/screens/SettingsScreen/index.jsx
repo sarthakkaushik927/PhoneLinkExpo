@@ -59,21 +59,22 @@ export default function SettingsScreen({ navigation }) {
     }
 
     setSaving(true);
-
-    // If already connected, disconnect first so the next connect() uses new URL
-    if (isConnected) disconnect();
-
-    const ok = await saveConfigManual(ipInput.trim(), String(portNum));
-    setSaving(false);
-
-    if (ok) {
-      Alert.alert(
-        '✅ Saved',
-        `Server set to ${ipInput.trim()}:${portNum}.\nGo back and tap Connect.`,
-        [{ text: 'OK', onPress: () => navigation.goBack() }],
-      );
-    } else {
-      Alert.alert('Error', 'Could not save settings. Please try again.');
+    try {
+      if (isConnected) disconnect();
+      const ok = await saveConfigManual(ipInput.trim(), String(portNum));
+      if (ok) {
+        Alert.alert(
+          '✅ Saved',
+          `Server set to ${ipInput.trim()}:${portNum}.\nGo back and tap Connect.`,
+          [{ text: 'OK', onPress: () => navigation.goBack() }],
+        );
+      } else {
+        Alert.alert('Error', 'Could not save settings. Please try again.');
+      }
+    } catch (e) {
+      Alert.alert('Error', 'Failed to save: ' + (e?.message ?? 'unknown error'));
+    } finally {
+      setSaving(false);
     }
   };
 

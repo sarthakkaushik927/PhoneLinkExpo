@@ -78,17 +78,12 @@ export function SocketProvider({ children }) {
       discoveryService.stopListening();
       setIsDiscovering(false);
 
-      // Only save the discovered IP if user has NOT manually configured one.
-      // If serverIp is already set (from AsyncStorage), just connect to the
-      // saved IP — do NOT overwrite it with the auto-discovered one.
-      if (!serverIp) {
-        saveConfig(ip, String(port)).then(() => {
-          socketClient.connect(`ws://${ip}:${port}`);
-          setStatus(CONNECTION_STATUS.CONNECTING);
-        });
-      } else {
-        console.log(`[Discovery] Manual IP already set (${serverIp}), skipping override.`);
-      }
+      // Always trust the live UDP discovery signal — it comes from the
+      // actual running server. Save it and connect immediately.
+      saveConfig(ip, String(port)).then(() => {
+        socketClient.connect(`ws://${ip}:${port}`);
+        setStatus(CONNECTION_STATUS.CONNECTING);
+      });
     };
 
     discoveryService.onDiscover(onDiscover);
@@ -98,7 +93,7 @@ export function SocketProvider({ children }) {
       discoveryService.stopListening();
       setIsDiscovering(false);
     };
-  }, [saveConfig, serverIp]);
+  }, [saveConfig]);
 
   const connect = useCallback(() => {
     if (!wsUrl) return; // No IP configured yet

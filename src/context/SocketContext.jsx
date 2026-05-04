@@ -74,15 +74,21 @@ export function SocketProvider({ children }) {
     discoveryService.startListening();
 
     const onDiscover = (ip, port) => {
-      console.log(`Discovered server at ${ip}:${port}`);
+      console.log(`[Discovery] Found server at ${ip}:${port}`);
       discoveryService.stopListening();
       setIsDiscovering(false);
-      
-      // Save config which will automatically trigger the component using it to update
-      saveConfig(ip, String(port)).then(() => {
-         socketClient.connect(`ws://${ip}:${port}`);
-         setStatus(CONNECTION_STATUS.CONNECTING);
-      });
+
+      // Only save the discovered IP if user has NOT manually configured one.
+      // If serverIp is already set (from AsyncStorage), just connect to the
+      // saved IP — do NOT overwrite it with the auto-discovered one.
+      if (!serverIp) {
+        saveConfig(ip, String(port)).then(() => {
+          socketClient.connect(`ws://${ip}:${port}`);
+          setStatus(CONNECTION_STATUS.CONNECTING);
+        });
+      } else {
+        console.log(`[Discovery] Manual IP already set (${serverIp}), skipping override.`);
+      }
     };
 
     discoveryService.onDiscover(onDiscover);
@@ -92,7 +98,7 @@ export function SocketProvider({ children }) {
       discoveryService.stopListening();
       setIsDiscovering(false);
     };
-  }, [saveConfig]);
+  }, [saveConfig, serverIp]);
 
   const connect = useCallback(() => {
     if (!wsUrl) return; // No IP configured yet

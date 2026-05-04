@@ -16,7 +16,6 @@
  *     composable and avoids prop-drilling listener references.
  */
 
-import { WS_URL as DEFAULT_WS_URL } from '../../config/server.config';
 
 /**
  * Maps to the native WebSocket.readyState numeric values.
@@ -103,7 +102,12 @@ class SocketClient {
       return;
     }
 
-    const target = url || DEFAULT_WS_URL;
+    if (!url) {
+      console.warn('[SocketClient] connect() called with no URL — ignoring. Wait for auto-discovery or set IP in Settings.');
+      return;
+    }
+
+    const target = url;
     console.log(`[SocketClient] Connecting to ${target} …`);
     this._socket = new WebSocket(target);
 

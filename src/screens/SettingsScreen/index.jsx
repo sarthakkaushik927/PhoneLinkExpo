@@ -25,7 +25,7 @@ import { useSocket } from '../../hooks/useSocket';
 import COLORS from '../../constants/colors';
 
 export default function SettingsScreen({ navigation }) {
-  const { serverIp, serverPort, saveConfig, configLoading, disconnect, isConnected, isDiscovering } = useSocket();
+  const { serverIp, serverPort, saveConfigManual, configLoading, disconnect, isConnected, isDiscovering } = useSocket();
 
   const [ipInput,   setIpInput]   = useState(serverIp   || '');
   const [portInput, setPortInput] = useState(serverPort  || '8765');
@@ -63,7 +63,7 @@ export default function SettingsScreen({ navigation }) {
     // If already connected, disconnect first so the next connect() uses new URL
     if (isConnected) disconnect();
 
-    const ok = await saveConfig(ipInput.trim(), String(portNum));
+    const ok = await saveConfigManual(ipInput.trim(), String(portNum));
     setSaving(false);
 
     if (ok) {

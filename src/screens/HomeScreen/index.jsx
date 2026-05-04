@@ -29,7 +29,6 @@ import { useAudioRoute, AUDIO_ROUTE }         from '../../hooks/useAudioRoute';
 import StatusCard                             from '../../components/bridge/StatusCard';
 import AppButton                              from '../../components/common/AppButton';
 import ActivityLog                            from '../../components/common/ActivityLog';
-import { SERVER_IP }                          from '../../config/server.config';
 import COLORS                                 from '../../constants/colors';
 import styles                                 from './HomeScreen.styles';
 
@@ -47,6 +46,7 @@ export default function HomeScreen() {
     connect, disconnect,
     simulateIncomingCall, sendMessage,
     isConnected, isConnecting, isDisconnected,
+    serverIp, wsUrl,
   } = useSocket();
 
   const { logLines, addLog } = useActivityLog();
@@ -197,7 +197,7 @@ export default function HomeScreen() {
         <StatusCard
           connectionStatus={status}
           lastCommand={lastCommand}
-          serverIp={SERVER_IP}
+          serverIp={wsUrl || serverIp}
         />
 
         {/* ── Live Call State banner ──────────────────────────────────── */}

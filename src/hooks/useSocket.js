@@ -32,7 +32,7 @@ import { CONNECTION_STATUS, useSocketContext } from '../context/SocketContext';
 export function useSocket() {
   const {
     status, lastCommand,
-    serverIp, serverPort, wsUrl, saveConfig, configLoading, isDiscovering,
+    serverIp, serverPort, wsUrl, saveConfig, saveConfigManual, configLoading, isDiscovering,
     connect, disconnect, sendMessage, simulateIncomingCall,
   } = useSocketContext();
 
@@ -45,6 +45,7 @@ export function useSocket() {
     serverPort,
     wsUrl,
     saveConfig,
+    saveConfigManual,
     configLoading,
     isDiscovering,
     // Derived booleans — avoids string comparisons leaking into UI

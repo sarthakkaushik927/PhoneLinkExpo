@@ -43,7 +43,7 @@ export function SocketProvider({ children }) {
   const [lastCommand, setLastCommand] = useState(null);
   const [isDiscovering, setIsDiscovering] = useState(false);
 
-  const { serverIp, serverPort, wsUrl, saveConfig, loading } = useServerConfig();
+  const { serverIp, serverPort, wsUrl, saveConfig, saveConfigManual, manuallyConfigured, loading } = useServerConfig();
 
   // Wire up SocketClient listeners once on mount; remove them on unmount.
   useEffect(() => {
@@ -68,8 +68,13 @@ export function SocketProvider({ children }) {
     };
   }, []); // Empty deps — intentional; runs once per Provider mount.
 
-  // UDP Auto-Discovery logic
+  // UDP Auto-Discovery logic — skipped if user manually configured an IP
   useEffect(() => {
+    if (manuallyConfigured) {
+      setIsDiscovering(false);
+      return; // User set IP manually — don't let discovery override it
+    }
+
     setIsDiscovering(true);
     discoveryService.startListening();
 
@@ -93,7 +98,7 @@ export function SocketProvider({ children }) {
       discoveryService.stopListening();
       setIsDiscovering(false);
     };
-  }, [saveConfig]);
+  }, [saveConfig, manuallyConfigured]);
 
   const connect = useCallback(() => {
     if (!wsUrl) return; // No IP configured yet

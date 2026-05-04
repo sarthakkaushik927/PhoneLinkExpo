@@ -130,6 +130,7 @@ export function SocketProvider({ children }) {
     configLoading: loading,
     isDiscovering,
     saveConfig,
+    saveConfigManual,
     connect,
     disconnect,
     sendMessage,

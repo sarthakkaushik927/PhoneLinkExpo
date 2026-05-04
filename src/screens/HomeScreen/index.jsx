@@ -197,7 +197,7 @@ export default function HomeScreen() {
         <StatusCard
           connectionStatus={status}
           lastCommand={lastCommand}
-          serverIp={wsUrl || serverIp}
+          serverIp={serverIp}
         />
 
         {/* ── Live Call State banner ──────────────────────────────────── */}
